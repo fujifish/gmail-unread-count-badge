@@ -1,7 +1,7 @@
 (() => {
   let unreadCount;
 
-	function getUnreadCount() {
+  function getUnreadCount() {
     const matched = document.title.match(/Inbox(?: \((\d+)\))? -/);
     const countText = matched ? matched[1] : "0";
 		const count = parseInt(countText);
