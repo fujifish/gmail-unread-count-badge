@@ -1,12 +1,20 @@
 (() => {
-  let desc = Object.getOwnPropertyDescriptor(Document.prototype, 'title');
-  Object.defineProperty(Document.prototype, 'title', {
-    configurable: true,
-    set(v) {
-      let m = String(v).match(/Inbox(?: \((\d+)\))? -/);
-      if (m) navigator.setAppBadge((m[1]|0) || null);
-      desc.set.call(this, v);
-    },
-    get() { return desc.get.call(this); }
-  });
+  let unreadCount;
+
+	function getUnreadCount() {
+    const matched = document.title.match(/Inbox(?: \((\d+)\))? -/);
+    const countText = matched ? matched[1] : "0";
+		const count = parseInt(countText);
+		return isNaN(count) ? 0 : count;
+	}
+
+	function updateBadgeIcon() {
+		const newUnreadCount = getUnreadCount();
+		if (newUnreadCount !== unreadCount) {
+			unreadCount = newUnreadCount
+			navigator.setAppBadge(unreadCount);
+		}
+	}
+
+	setInterval(updateBadgeIcon, 500);
 })();
